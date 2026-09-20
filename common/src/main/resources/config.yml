@@ -317,6 +317,8 @@ Resources:
     #Name of the readable .zip generated in plugins/CraftEngine/generated
     #Leave empty to disable CraftEngine item rendering support
     ResourcePack: ""
+    #Use the add-on's vanilla fonts instead of CraftEngine's minecraft:default and minecraft:uniform overrides
+    IgnoreDefaultFontOverrides: false
   #Set which resource pack should be installed and in what order
   #Visit this page for more info:
   #https://github.com/LOOHP/InteractiveChat-DiscordSRV-Addon/wiki/Resource-Pack

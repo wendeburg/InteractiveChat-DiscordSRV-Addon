@@ -34,11 +34,13 @@ import com.loohp.interactivechatdiscordsrvaddon.resources.textures.TextureResour
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 public class FontManager extends AbstractManager implements IFontManager {
@@ -63,6 +65,8 @@ public class FontManager extends AbstractManager implements IFontManager {
             throw new IllegalArgumentException(root.getAbsolutePath() + " is not a directory.");
         }
         Map<String, ResourcePackFile> fileList = files.computeIfAbsent(namespace, k -> new HashMap<>());
+        @SuppressWarnings("unchecked")
+        Set<String> excludedFonts = meta.length > 0 ? (Set<String>) meta[0] : Collections.emptySet();
         JSONParser parser = new JSONParser();
         Map<String, FontProvider> fonts = new HashMap<>(this.fonts);
         Collection<ResourcePackFile> files = root.listFilesRecursively();
@@ -76,6 +80,9 @@ public class FontManager extends AbstractManager implements IFontManager {
                 try {
                     String key = namespace + ":" + file.getRelativePathFrom(root);
                     key = key.substring(0, key.lastIndexOf("."));
+                    if (excludedFonts.contains(key)) {
+                        continue;
+                    }
                     JSONObject rootJson = readJSONObject(file);
                     List<MinecraftFont> providedFonts = new ArrayList<>();
                     int index = -1;

@@ -428,11 +428,11 @@ public class ResourceManager implements AutoCloseable {
 
                 try {
                     filterResources(resourceFilterBlocks);
-                    loadAssets(assetsFolder, languageMeta, textureAtlases);
+                    loadAssets(assetsFolder, languageMeta, textureAtlases, resourcePackSource.getExcludedFonts());
                     for (PackOverlay overlay : overlays) {
                         try {
                             if (overlay.getFormats().isCompatible(nativeServerPackFormat)) {
-                                loadAssets(resourcePack.getChild(overlay.getDirectory()).getChild("assets"), languageMeta, textureAtlases);
+                                loadAssets(resourcePack.getChild(overlay.getDirectory()).getChild("assets"), languageMeta, textureAtlases, resourcePackSource.getExcludedFonts());
                             }
                         } catch (Throwable e) {
                             new ResourceLoadingException("Unable to load overlay " + overlay.getDirectory() + " for pack " + resourcePackNameStr, e).printStackTrace();
@@ -503,7 +503,7 @@ public class ResourceManager implements AutoCloseable {
         return Collections.unmodifiableMap(atlasesByNamespace);
     }
 
-    private void loadAssets(ResourcePackFile assetsFolder, Map<String, LanguageMeta> languageMeta, Map<String, TextureAtlases> textureAtlases) {
+    private void loadAssets(ResourcePackFile assetsFolder, Map<String, LanguageMeta> languageMeta, Map<String, TextureAtlases> textureAtlases, Set<String> excludedFonts) {
         if (!assetsFolder.exists() || !assetsFolder.isDirectory()) {
             throw new IllegalArgumentException(assetsFolder.getAbsolutePath() + " is not a directory.");
         }
@@ -553,7 +553,7 @@ public class ResourceManager implements AutoCloseable {
                 String namespace = folder.getName();
                 ResourcePackFile font = folder.getChild("font");
                 if (font.exists() && font.isDirectory()) {
-                    ((AbstractManager) fontManager).loadDirectory(namespace, font);
+                    ((AbstractManager) fontManager).loadDirectory(namespace, font, excludedFonts);
                 }
             }
         }

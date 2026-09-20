@@ -21,13 +21,19 @@
 package com.loohp.interactivechatdiscordsrvaddon.resources;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
 public class ResourcePackSource {
 
     public static ResourcePackSource ofCustom(String name, File resourcePackFile, ResourcePackType type) {
         return new ResourcePackSource(name, resourcePackFile, type, false);
+    }
+
+    public static ResourcePackSource ofCustom(String name, File resourcePackFile, ResourcePackType type, Set<String> excludedFonts) {
+        return new ResourcePackSource(name, resourcePackFile, type, false, excludedFonts);
     }
 
     public static ResourcePackSource ofDefault(String name, File resourcePackFile, ResourcePackType type) {
@@ -39,13 +45,19 @@ public class ResourcePackSource {
     private final File resourcePackFile;
     private final ResourcePackType type;
     private final boolean defaultResource;
+    private final Set<String> excludedFonts;
 
     private ResourcePackSource(String name, File resourcePackFile, ResourcePackType type, boolean defaultResource) {
+        this(name, resourcePackFile, type, defaultResource, Collections.emptySet());
+    }
+
+    private ResourcePackSource(String name, File resourcePackFile, ResourcePackType type, boolean defaultResource, Set<String> excludedFonts) {
         this.name = name;
         this.uuid = UUID.randomUUID();
         this.resourcePackFile = resourcePackFile;
         this.type = type;
         this.defaultResource = defaultResource;
+        this.excludedFonts = Collections.unmodifiableSet(excludedFonts);
     }
 
     public UUID getUniqueId() {
@@ -66,6 +78,10 @@ public class ResourcePackSource {
 
     public boolean isDefaultResource() {
         return defaultResource;
+    }
+
+    public Set<String> getExcludedFonts() {
+        return excludedFonts;
     }
 
     @Override

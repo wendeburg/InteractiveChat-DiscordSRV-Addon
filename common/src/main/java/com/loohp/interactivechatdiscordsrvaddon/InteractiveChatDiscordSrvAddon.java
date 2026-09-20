@@ -264,6 +264,7 @@ public class InteractiveChatDiscordSrvAddon extends JavaPlugin implements Listen
     public boolean forceUnicode = false;
     public boolean includeServerResourcePack = true;
     public File craftEngineResourcePack;
+    public boolean craftEngineIgnoreDefaultFontOverrides = false;
     public boolean itemsAdderPackAsServerResourcePack = true;
     public String alternateResourcePackURL = "";
     public String alternateResourcePackHash = "";
@@ -646,6 +647,7 @@ public class InteractiveChatDiscordSrvAddon extends JavaPlugin implements Listen
         language = config.getConfiguration().getString("Resources.Language");
         LanguageUtils.loadTranslations(language);
         forceUnicode = config.getConfiguration().getBoolean("Resources.ForceUnicodeFont");
+        craftEngineIgnoreDefaultFontOverrides = config.getConfiguration().getBoolean("Resources.CraftEngine.IgnoreDefaultFontOverrides", false);
 
         FontTextureResource.setCacheTime(cacheTimeout);
 
@@ -787,7 +789,7 @@ public class InteractiveChatDiscordSrvAddon extends JavaPlugin implements Listen
                 if (InteractiveChat.isPluginEnabled("CraftEngine")) {
                     if (CraftEngineHook.isReadableResourcePack(craftEngineResourcePack)) {
                         Bukkit.getConsoleSender().sendMessage(ChatColor.AQUA + "[ICDiscordSrvAddon] Loading \"CraftEngine\" resources...");
-                        sources.add(ResourcePackSource.ofCustom("CraftEngine", craftEngineResourcePack, ResourcePackType.SERVER));
+                        sources.add(ResourcePackSource.ofCustom("CraftEngine", craftEngineResourcePack, ResourcePackType.SERVER, craftEngineIgnoreDefaultFontOverrides ? new HashSet<>(Arrays.asList("minecraft:default", "minecraft:uniform")) : Collections.emptySet()));
                         craftEngineHook = true;
                     } else {
                         craftEngineHook = false;
