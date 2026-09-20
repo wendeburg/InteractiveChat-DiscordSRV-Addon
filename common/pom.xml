@@ -356,13 +356,19 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.20.6-R0.1-SNAPSHOT</version>
+            <version>26.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.bukkit</groupId>
-            <artifactId>craftbukkit</artifactId>
-            <version>1.20.6-R0.1-SNAPSHOT</version>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot</artifactId>
+            <version>26.2-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.checkerframework</groupId>
+            <artifactId>checker-qual</artifactId>
+            <version>3.49.3</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -431,6 +437,7 @@
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
+        <!-- Legacy implementations are deliberately excluded from the 26.2-only distribution.
         <dependency>
             <groupId>com.loohp</groupId>
             <artifactId>InteractiveChatDiscordSrvAddon-V1_8</artifactId>
@@ -677,6 +684,7 @@
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
+        -->
         <dependency>
             <groupId>com.loohp</groupId>
             <artifactId>InteractiveChatDiscordSrvAddon-V26_2</artifactId>

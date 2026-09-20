@@ -665,10 +665,10 @@ public class DiscordItemStackUtils {
                             if (bukkitPlayer != null) {
                                 Key attributeModifierKey = NMSAddon.getInstance().getAttributeModifierKey(attributemodifier);
                                 if (attributeModifierKey.equals(AttributeModifiersUtils.BASE_ATTACK_DAMAGE_MODIFIER_ID)) {
-                                    amount += bukkitPlayer.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).getBaseValue();
+                                    amount += bukkitPlayer.getAttribute(Attribute.ATTACK_DAMAGE).getBaseValue();
                                     flag = true;
                                 } else if (attributeModifierKey.equals(AttributeModifiersUtils.BASE_ATTACK_SPEED_MODIFIER_ID)) {
-                                    amount += bukkitPlayer.getAttribute(Attribute.GENERIC_ATTACK_SPEED).getBaseValue();
+                                    amount += bukkitPlayer.getAttribute(Attribute.ATTACK_SPEED).getBaseValue();
                                     flag = true;
                                 }
                             }
@@ -717,11 +717,11 @@ public class DiscordItemStackUtils {
 
                             if (bukkitPlayer != null) {
                                 if (attributemodifier.getUniqueId().equals(AttributeModifiersUtils.BASE_ATTACK_DAMAGE_UUID)) {
-                                    amount += bukkitPlayer.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).getBaseValue();
+                                    amount += bukkitPlayer.getAttribute(Attribute.ATTACK_DAMAGE).getBaseValue();
                                     amount += NMSAddon.getInstance().getLegacyEnchantmentDamageBonus(item, null);
                                     flag = true;
                                 } else if (attributemodifier.getUniqueId().equals(AttributeModifiersUtils.BASE_ATTACK_SPEED_UUID)) {
-                                    amount += bukkitPlayer.getAttribute(Attribute.GENERIC_ATTACK_SPEED).getBaseValue();
+                                    amount += bukkitPlayer.getAttribute(Attribute.ATTACK_SPEED).getBaseValue();
                                     flag = true;
                                 }
                             }
