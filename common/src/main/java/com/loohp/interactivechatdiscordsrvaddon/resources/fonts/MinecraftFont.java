@@ -108,11 +108,11 @@ public abstract class MinecraftFont {
             case TrueTypeFont.TYPE_KEY: {
                 String resourceLocation = fontJson.get("file").toString();
                 JSONArray shiftArray = (JSONArray) fontJson.get("shift");
-                float leftShift = ((Number) shiftArray.get(0)).floatValue();
-                float downShift = ((Number) shiftArray.get(1)).floatValue();
+                float leftShift = shiftArray == null ? 0 : ((Number) shiftArray.get(0)).floatValue();
+                float downShift = shiftArray == null ? 0 : ((Number) shiftArray.get(1)).floatValue();
                 AffineTransform shift = AffineTransform.getTranslateInstance(-leftShift, downShift);
-                float size = ((Number) fontJson.get("size")).floatValue();
-                float oversample = ((Number) fontJson.get("oversample")).floatValue();
+                float size = ((Number) fontJson.getOrDefault("size", 11)).floatValue();
+                float oversample = ((Number) fontJson.getOrDefault("oversample", 1)).floatValue();
                 String skip = fontJson.getOrDefault("skip", "").toString();
                 return new TrueTypeFont(manager, provider, resourceLocation, shift, size, oversample, skip);
             }
