@@ -313,6 +313,10 @@ Resources:
   AlternateServerResourcePack:
     URL: ""
     Hash: ""
+  CraftEngine:
+    #Name of the readable .zip generated in plugins/CraftEngine/generated
+    #Leave empty to disable CraftEngine item rendering support
+    ResourcePack: ""
   #Set which resource pack should be installed and in what order
   #Visit this page for more info:
   #https://github.com/LOOHP/InteractiveChat-DiscordSRV-Addon/wiki/Resource-Pack

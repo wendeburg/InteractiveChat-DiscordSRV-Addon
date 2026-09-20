@@ -3,12 +3,12 @@ package com.loohp.interactivechatdiscordsrvaddon.hooks.craftengine;
 import com.loohp.interactivechat.objectholders.OfflineICPlayer;
 import net.momirealms.craftengine.bukkit.item.BukkitItemManager;
 import net.momirealms.craftengine.bukkit.plugin.BukkitCraftEngine;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 
 import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 public class CraftEngineHook {
 
@@ -25,22 +25,26 @@ public class CraftEngineHook {
         return BukkitItemManager.instance().s2c(clone, craftEnginePlayer).orElse(clone);
     }
 
-    public static File getGeneratedResourcePackFile() {
-        if (!isEngineAvailable()) {
+    public static boolean isReadableResourcePack(File resourcePack) {
+        return resourcePack != null && resourcePack.isFile() && resourcePack.canRead() && resourcePack.getName().toLowerCase().endsWith(".zip");
+    }
+
+    public static File getGeneratedResourcePackFile(String resourcePackName) {
+        if (resourcePackName == null || resourcePackName.isEmpty() || !resourcePackName.equals(new File(resourcePackName).getName())) {
             return null;
         }
-        Path path = BukkitCraftEngine.instance().packManager().resourcePackPath();
-        if (path != null && Files.exists(path) && Files.isRegularFile(path)) {
-            return path.toFile();
+        Plugin craftEngine = Bukkit.getPluginManager().getPlugin("CraftEngine");
+        if (craftEngine == null) {
+            return null;
         }
-        return null;
+        return new File(new File(craftEngine.getDataFolder(), "generated"), resourcePackName);
     }
 
     private static net.momirealms.craftengine.core.entity.player.Player adaptPlayer(OfflineICPlayer icPlayer) {
         if (icPlayer == null || !icPlayer.isOnline() || !icPlayer.getPlayer().isLocal()) {
             return null;
         }
-        return BukkitCraftEngine.instance().adapt(icPlayer.getPlayer().getLocalPlayer());
+        return BukkitCraftEngine.instance().platform().getPlayer(icPlayer.getPlayer().getLocalPlayer().getUniqueId());
     }
 
     private static boolean isEmpty(ItemStack itemStack) {

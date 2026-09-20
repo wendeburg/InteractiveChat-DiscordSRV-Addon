@@ -263,6 +263,7 @@ public class InteractiveChatDiscordSrvAddon extends JavaPlugin implements Listen
     public List<String> resourceOrder = new ArrayList<>();
     public boolean forceUnicode = false;
     public boolean includeServerResourcePack = true;
+    public File craftEngineResourcePack;
     public boolean itemsAdderPackAsServerResourcePack = true;
     public String alternateResourcePackURL = "";
     public String alternateResourcePackHash = "";
@@ -370,11 +371,6 @@ public class InteractiveChatDiscordSrvAddon extends JavaPlugin implements Listen
             getServer().getConsoleSender().sendMessage(ChatColor.AQUA + "[ICDiscordSrvAddon] InteractiveChat DiscordSRV Addon has hooked into ImageFrame!");
             Bukkit.getPluginManager().registerEvents(new ImageFrameEvents(), this);
             imageFrameHook = true;
-        }
-
-        if (InteractiveChat.isPluginEnabled("CraftEngine")) {
-            getServer().getConsoleSender().sendMessage(ChatColor.AQUA + "[ICDiscordSrvAddon] InteractiveChat DiscordSRV Addon has hooked into CraftEngine");
-            craftEngineHook = true;
         }
 
         if (!compatible()) {
@@ -491,6 +487,11 @@ public class InteractiveChatDiscordSrvAddon extends JavaPlugin implements Listen
         }
 
         includeServerResourcePack = config.getConfiguration().getBoolean("Resources.IncludeServerResourcePack");
+        String craftEngineResourcePackName = config.getConfiguration().getString("Resources.CraftEngine.ResourcePack", "").trim();
+        craftEngineResourcePack = CraftEngineHook.getGeneratedResourcePackFile(craftEngineResourcePackName);
+        if (!CraftEngineHook.isReadableResourcePack(craftEngineResourcePack)) {
+            craftEngineHook = false;
+        }
         itemsAdderPackAsServerResourcePack = config.getConfiguration().getBoolean("Resources.ItemsAdderPackAsServerResourcePack");
         alternateResourcePackURL = config.getConfiguration().getString("Resources.AlternateServerResourcePack.URL");
         alternateResourcePackHash = config.getConfiguration().getString("Resources.AlternateServerResourcePack.Hash");
@@ -782,11 +783,19 @@ public class InteractiveChatDiscordSrvAddon extends JavaPlugin implements Listen
                     Bukkit.getConsoleSender().sendMessage(ChatColor.AQUA + "[ICDiscordSrvAddon] Loading \"" + resourceName + "\" resources...");
                     sources.add(ResourcePackSource.ofCustom(resourceName, serverResourcePack, ResourcePackType.SERVER));
                 }
-                if (craftEngineHook) {
-                    File cePackFile = CraftEngineHook.getGeneratedResourcePackFile();
-                    if (cePackFile != null) {
+                craftEngineHook = false;
+                if (InteractiveChat.isPluginEnabled("CraftEngine")) {
+                    if (CraftEngineHook.isReadableResourcePack(craftEngineResourcePack)) {
                         Bukkit.getConsoleSender().sendMessage(ChatColor.AQUA + "[ICDiscordSrvAddon] Loading \"CraftEngine\" resources...");
-                        sources.add(ResourcePackSource.ofCustom("CraftEngine", cePackFile, ResourcePackType.SERVER));
+                        sources.add(ResourcePackSource.ofCustom("CraftEngine", craftEngineResourcePack, ResourcePackType.SERVER));
+                        craftEngineHook = true;
+                    } else {
+                        craftEngineHook = false;
+                        if (craftEngineResourcePack == null) {
+                            Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "[ICDiscordSrvAddon] CraftEngine is installed, but no readable resource pack is configured. CraftEngine item rendering is disabled.");
+                        } else {
+                            Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "[ICDiscordSrvAddon] CraftEngine resource pack is not a readable .zip file: " + craftEngineResourcePack + ". CraftEngine item rendering is disabled.");
+                        }
                     }
                 }
                 resourceManager.loadResources(sources, (source, info) -> {
